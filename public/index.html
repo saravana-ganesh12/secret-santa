@@ -1,0 +1,94 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Santa</title>
+    <style>
+        body {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        input {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+        button {
+            width: 25%;
+            padding: 5px;
+        }
+
+        div {
+            display: flex;    
+        }
+    </style>
+</head>
+<body>
+    <h1>Secret Santa Game</h1>
+    
+    <form id="fileUploadForm">
+        <div>
+            <label for="file1">Upload current Input File:</label>
+            <input type="file" id="file1" name="file1" accept=".xlsx, .csv" required>
+        </div>
+        
+        <div>
+            <label for="file2">Upload Previous Year Output:</label>
+            <input type="file" id="file2" name="file2" accept=".xlsx, .csv" required>
+        </div>
+        <br>
+        <button type="submit">Download Output</button>
+    </form>
+
+    <script>
+        //listen for submit click
+        document.getElementById('fileUploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const file1 = document.getElementById('file1').files[0];
+            const file2 = document.getElementById('file2').files[0];
+            
+            if (!file1 || !file2) {
+                alert('Please select both files');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file1', file1);
+            formData.append('file2', file2);
+
+            try {
+                //Call API for get output for secret santa
+                const response = await fetch('http://localhost:5000/secretchild', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.status === 400) {
+                    let error = await response.json()
+                    throw new Error(error.error);
+                }
+
+                //Download the response as a file
+                const csvData = await response.text()
+                const blob = new Blob([csvData], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'output.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error);
+            }
+        });
+    </script>
+</body>
+</html>
