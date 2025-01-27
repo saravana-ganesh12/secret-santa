@@ -22,9 +22,10 @@ The program gets input as CSV or XLSX from user and  processes two input files (
 
    ```bash
    git clone https://github.com/saravana-ganesh12/secret-santa.git
-
+    ```
     ```bash
     cd secret-santa
+    ```
 
 2. **Install Dependencies**
 
@@ -32,6 +33,7 @@ The program gets input as CSV or XLSX from user and  processes two input files (
 
     ```bash
     npm install
+    ```
 
 3. **To start the server:**
 
@@ -39,6 +41,7 @@ The program gets input as CSV or XLSX from user and  processes two input files (
 
     ```bash
     node server.js
+    ```
 
 ## Run Test Case
 
@@ -48,6 +51,7 @@ The program gets input as CSV or XLSX from user and  processes two input files (
 
     ```bash
     node test
+    ```
 
 
 ## Directory Structure
